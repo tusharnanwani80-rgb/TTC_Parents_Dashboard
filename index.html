@@ -56,7 +56,7 @@ body {
   animation: popIn 0.4s cubic-bezier(.34,1.3,.64,1);
 }
 .id-logo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--rust); box-shadow: 4px 4px 0 var(--rust); margin-bottom: 16px; }
-.id-title { font-family: 'Fredoka One', cursive; font-size: 32px; color: var(--dark); }
+.id-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: var(--dark); }
 .id-title span { color: var(--rust); }
 .id-sub { font-size: 13px; font-weight: 600; color: var(--grey); margin-top: 4px; margin-bottom: 24px; }
 .id-label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--grey); text-align: left; margin-bottom: 6px; }
@@ -370,24 +370,20 @@ body {
 .rev-head-title { font-family: 'Righteous', cursive; font-size: 18px; color: var(--dark); }
 .rev-stars { color: var(--yellow); font-size: 18px; letter-spacing: 2px; }
 
-/* Manual reviews (fallback) */
-.review-card {
-  background: var(--off); border: 2px solid var(--light); border-radius: 14px;
-  padding: 14px; margin-bottom: 10px;
-}
-.review-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.review-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--blue); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Fredoka One', cursive; font-size: 16px; border: 2px solid var(--dark); flex-shrink: 0; }
-.review-name { font-size: 14px; font-weight: 800; color: var(--dark); }
-.review-date { font-size: 11px; font-weight: 600; color: var(--grey); }
-.review-stars { color: var(--yellow); font-size: 14px; }
-.review-text { font-size: 13px; font-weight: 600; color: #444; line-height: 1.5; }
-
 /* ══════ KEYFRAMES ══════ */
 @keyframes bounceIn { from{opacity:0;transform:scale(0) rotate(-20deg)} to{opacity:1;transform:scale(1) rotate(0)} }
 
 /* ══════ UTILS ══════ */
 .mt-16 { margin-top: 16px; }
 .separator { height: 2px; background: var(--light); border-radius: 2px; margin: 20px 0; }
+
+/* ══════ LEADERBOARD ══════ */
+.lb-row { display: flex; align-items: center; padding: 14px 16px; border-bottom: 2px solid var(--light); }
+.lb-row:last-child { border-bottom: none; }
+.lb-rank { width: 35px; font-family: 'Fredoka One', cursive; font-size: 18px; color: var(--grey); text-align: center; }
+.lb-medal { font-size: 24px; }
+.lb-name { flex: 1; font-size: 14px; font-weight: 800; color: var(--dark); padding-left: 10px; }
+.lb-score { font-family: 'Righteous', cursive; font-size: 16px; color: var(--blue); background: #EEF2FF; padding: 4px 10px; border-radius: 8px; border: 2px solid var(--blue); }
 </style>
 </head>
 <body>
@@ -395,7 +391,7 @@ body {
 <div class="screen active" id="idScreen">
   <div class="id-card">
     <img class="id-logo" src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" alt="TTC">
-    <div class="id-title">TTC <span>Parents</span></div>
+    <div class="id-title" style="font-size: 26px;">TTC Parent <span>Dashboard</span></div>
     <div class="id-sub">Your child's progress, at a glance 📊</div>
     <div class="id-label">Enter Student ID</div>
     <input class="id-input" id="studentIdInput" type="text" placeholder="e.g. TTC01" maxlength="10" autocomplete="off" autocapitalize="characters">
@@ -503,50 +499,15 @@ body {
       </div>
       <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
       <div class="elfsight-app-e87fdd6e-f4b8-4807-89b4-ecc80ca4f3c0" data-elfsight-app-lazy></div>
-
-      <div id="fallbackReviews">
-        <div class="review-card">
-          <div class="review-top">
-            <div class="review-avatar" style="background:#4361EE">R</div>
-            <div>
-              <div class="review-name">Rakesh Sharma</div>
-              <div class="review-date">March 2026 · <span class="review-stars">★★★★★</span></div>
-            </div>
-          </div>
-          <div class="review-text">"My son's Maths went from 65% to 88% in just 3 months at TTC. Tushar Sir explains every concept with so much patience. Highly recommended to every parent in Wardha!"</div>
-        </div>
-        <div class="review-card">
-          <div class="review-top">
-            <div class="review-avatar" style="background:#FF6B35">P</div>
-            <div>
-              <div class="review-name">Pooja Kulkarni</div>
-              <div class="review-date">February 2026 · <span class="review-stars">★★★★★</span></div>
-            </div>
-          </div>
-          <div class="review-text">"Mahek Ma'am's Science classes are outstanding. My daughter scored 92/100 in her board exam. The personalized attention at TTC makes all the difference."</div>
-        </div>
-        <div class="review-card">
-          <div class="review-top">
-            <div class="review-avatar" style="background:#06D6A0">S</div>
-            <div>
-              <div class="review-name">Suresh Wankhade</div>
-              <div class="review-date">January 2026 · <span class="review-stars">★★★★★</span></div>
-            </div>
-          </div>
-          <div class="review-text">"Kajal Ma'am teaches Hindi and Marathi so beautifully. My child used to fear Hindi exams, now she loves the subject. TTC has transformed her completely!"</div>
-        </div>
-        <div class="review-card">
-          <div class="review-top">
-            <div class="review-avatar" style="background:#A78BFA">M</div>
-            <div>
-              <div class="review-name">Meena Deshmukh</div>
-              <div class="review-date">December 2025 · <span class="review-stars">★★★★★</span></div>
-            </div>
-          </div>
-          <div class="review-text">"Best tuition classes in Ganesh Nagar! The homework tracking and regular tests keep the students disciplined. We get full progress updates. 5 stars without a doubt!"</div>
-        </div>
-      </div>
     </div>
+
+    <div class="separator"></div>
+    <div class="sec-title">🏆 TTC Top 5 Achievers</div>
+    <div class="review-card" style="background: var(--white); border-color: var(--dark); padding: 0; overflow: hidden; margin-bottom: 30px;">
+      <div id="leaderboardList">
+         </div>
+    </div>
+
   </div>
 
   <nav class="bottom-nav">
@@ -716,6 +677,7 @@ function populateDashboard() {
   populateProgress(s);
   populateTests(s);
   populateSyllabus(s);
+  populateLeaderboard();
 }
 
 function populateHome(s) {
@@ -1017,6 +979,55 @@ function populateSyllabus(s) {
 function toggleSyl(i) {
   const elem = document.getElementById('syl' + i);
   if(elem) elem.classList.toggle('open');
+}
+
+// ═══════════════════════════════════
+//  LEADERBOARD GENERATOR
+// ═══════════════════════════════════
+function populateLeaderboard() {
+  const lbContainer = document.getElementById('leaderboardList');
+  if (!lbContainer) return;
+
+  let studentAverages = [];
+
+  // 1. Calculate averages for all students in the database
+  for (let id in STUDENTS) {
+    let s = STUDENTS[id];
+    if (s.subjects && s.subjects.length > 0) {
+      let avg = Math.round(s.subjects.reduce((a,b) => a + b.score, 0) / s.subjects.length);
+      studentAverages.push({ name: s.name, avg: avg });
+    }
+  }
+
+  // 2. Sort them from highest to lowest
+  studentAverages.sort((a, b) => b.avg - a.avg);
+
+  // 3. Take the Top 5
+  let top5 = studentAverages.slice(0, 5);
+
+  // 4. Build the visual rows
+  let html = '';
+  top5.forEach((student, index) => {
+    let rankNum = index + 1;
+    let medal = rankNum === 1 ? '<span class="lb-medal">🥇</span>' : 
+                rankNum === 2 ? '<span class="lb-medal">🥈</span>' : 
+                rankNum === 3 ? '<span class="lb-medal">🥉</span>' : 
+                `#${rankNum}`;
+
+    html += `
+      <div class="lb-row">
+        <div class="lb-rank">${medal}</div>
+        <div class="lb-name">${student.name}</div>
+        <div class="lb-score">${student.avg}%</div>
+      </div>
+    `;
+  });
+
+  if (top5.length === 0) {
+    html = '<div style="padding:16px; text-align:center; font-size:13px; color:var(--grey);">Not enough data for leaderboard yet.</div>';
+  }
+
+  lbContainer.innerHTML = html;
 }
 
 // ═══════════════════════════════════
