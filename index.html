@@ -392,25 +392,18 @@ body {
 </head>
 <body>
 
-<!-- ═══════════════════════════
-     1. ID ENTRY SCREEN
-═══════════════════════════ -->
 <div class="screen active" id="idScreen">
   <div class="id-card">
     <img class="id-logo" src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" alt="TTC">
     <div class="id-title">TTC <span>Parents</span></div>
     <div class="id-sub">Your child's progress, at a glance 📊</div>
     <div class="id-label">Enter Student ID</div>
-    <input class="id-input" id="studentIdInput" type="text" placeholder="e.g. TTC001" maxlength="10" autocomplete="off" autocapitalize="characters">
-    <div class="id-hint">Demo IDs: <span>TTC001</span> · <span>TTC002</span> · <span>TTC003</span></div>
+    <input class="id-input" id="studentIdInput" type="text" placeholder="e.g. TTC01" maxlength="10" autocomplete="off" autocapitalize="characters">
     <button class="id-btn" onclick="loginStudent()">🚀 View Dashboard</button>
-    <div class="id-error" id="idError">❌ Student ID not found. Please check and try again.</div>
+    <div class="id-error" id="idError"></div>
   </div>
 </div>
 
-<!-- ═══════════════════════════
-     2. WELCOME SCREEN
-═══════════════════════════ -->
 <div class="screen" id="welcomeScreen">
   <div class="welcome-inner">
     <img class="welcome-logo" src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" alt="TTC">
@@ -421,11 +414,7 @@ body {
   </div>
 </div>
 
-<!-- ═══════════════════════════
-     3. DASHBOARD
-═══════════════════════════ -->
 <div class="screen" id="dashboard">
-  <!-- Header -->
   <div class="dash-header">
     <div class="header-left">
       <img class="header-logo" src="https://i.postimg.cc/x9mDND2Q/Ttc-logo.png" alt="TTC">
@@ -440,18 +429,15 @@ body {
     </div>
   </div>
 
-  <!-- Tab Panels -->
   <div id="tab-home" class="tab-panel active">
     <div class="sec-title">🏠 Overview <span class="sec-chip" id="homeDateChip">Today</span></div>
 
     <div class="stat-grid" id="statGrid">
-      <!-- filled by JS -->
-    </div>
+      </div>
 
     <div class="home-hw-preview" id="homeTodayHW">
       <div class="hw-preview-title"><div class="hw-dot"></div> Today's Homework</div>
-      <!-- filled by JS -->
-    </div>
+      </div>
 
     <div class="teacher-msg" id="teacherMsgCard">
       <div class="tmsg-label">📌 TEACHER'S MESSAGE</div>
@@ -476,12 +462,10 @@ body {
     <div class="sec-title">📊 Performance</div>
 
     <div class="strong-weak-grid" id="swGrid">
-      <!-- filled by JS -->
-    </div>
+      </div>
 
     <div class="subject-bars" id="subjectBars">
-      <!-- filled by JS -->
-    </div>
+      </div>
 
     <div class="chart-wrap">
       <div class="chart-title">📈 Score Trend (Last 4 Tests)</div>
@@ -492,15 +476,13 @@ body {
   <div id="tab-tests" class="tab-panel">
     <div class="sec-title">📝 Test Reports</div>
     <div id="testsList">
-      <!-- filled by JS -->
-    </div>
+      </div>
   </div>
 
   <div id="tab-syllabus" class="tab-panel">
     <div class="sec-title">✅ Completion Report</div>
     <div id="syllabusList">
-      <!-- filled by JS -->
-    </div>
+      </div>
   </div>
 
   <div id="tab-reviews" class="tab-panel">
@@ -519,11 +501,9 @@ body {
           <div class="rev-stars">★★★★★</div>
         </div>
       </div>
-      <!-- Elfsight Google Reviews Widget -->
       <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
       <div class="elfsight-app-e87fdd6e-f4b8-4807-89b4-ecc80ca4f3c0" data-elfsight-app-lazy></div>
 
-      <!-- Fallback static reviews shown while Elfsight loads -->
       <div id="fallbackReviews">
         <div class="review-card">
           <div class="review-top">
@@ -569,7 +549,6 @@ body {
     </div>
   </div>
 
-  <!-- Bottom Nav -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('home',this)">
       <span class="nav-icon">🏠</span> Home
@@ -600,6 +579,8 @@ body {
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxQiwdMGjaY2ZcGE0iaAbwC72CPjgRp2WhHKyj1mjF5vHd_2wzKjofdEMoeHisz2i-Xsg/exec';
 
 let STUDENTS = {}; // This will hold the live data from your Sheet
+let currentStudent = null;
+let perfChart = null;
 
 // ═══════════════════════════════════
 //  LIVE LOGIN & DATA FETCHING
@@ -643,7 +624,7 @@ async function loginStudent() {
         playWelcomeSound();
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#E8522A','#FFD93D','#4361EE','#FF3D8A','#06D6A0'] });
       } else {
-        err.innerHTML = `❌ ID "${raw}" exists, but it's not in the database yet.`;
+        err.innerHTML = `❌ ID "${raw}" not found in your Google Sheet.`;
         err.classList.add('show');
       }
     } else {
@@ -660,11 +641,6 @@ async function loginStudent() {
   btn.disabled = false;
 }
 
-  // Restore button state
-  btn.innerText = originalBtnText;
-  btn.disabled = false;
-}
-
 function showError() {
   const err = document.getElementById('idError');
   err.classList.remove('show');
@@ -673,10 +649,6 @@ function showError() {
   document.getElementById('studentIdInput').style.borderColor = 'var(--pink)';
   document.getElementById('studentIdInput').style.boxShadow = '3px 3px 0 var(--pink)';
 }
-
-// (Leave the rest of the JavaScript below this exactly as it is!)
-let currentStudent = null;
-let perfChart = null;
 
 // ═══════════════════════════════════
 //  WEB AUDIO — WELCOME CHIME
@@ -706,27 +678,6 @@ function playWelcomeSound() {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-}
-
-function loginStudent() {
-  const raw = document.getElementById('studentIdInput').value.trim().toUpperCase();
-  const err = document.getElementById('idError');
-  if (STUDENTS[raw]) {
-    err.classList.remove('show');
-    currentStudent = STUDENTS[raw];
-    // Setup welcome
-    document.getElementById('welcomeParentMsg').textContent = `Hello, ${currentStudent.parentName}! 🙏`;
-    document.getElementById('welcomeSubMsg').textContent = `${currentStudent.name} · ${currentStudent.class} · ${currentStudent.board}`;
-    showScreen('welcomeScreen');
-    playWelcomeSound();
-    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#E8522A','#FFD93D','#4361EE','#FF3D8A','#06D6A0'] });
-  } else {
-    err.classList.remove('show');
-    void err.offsetWidth;
-    err.classList.add('show');
-    document.getElementById('studentIdInput').style.borderColor = 'var(--pink)';
-    document.getElementById('studentIdInput').style.boxShadow = '3px 3px 0 var(--pink)';
-  }
 }
 
 function openDashboard() {
@@ -775,10 +726,10 @@ function populateHome(s) {
   // Stats
   const totalChaps = Object.values(s.syllabus).reduce((a,v) => a + v.done.length + v.pending.length, 0);
   const doneChaps = Object.values(s.syllabus).reduce((a,v) => a + v.done.length, 0);
-  const pct = Math.round(doneChaps / totalChaps * 100);
-  const latestTest = s.tests[0];
+  const pct = totalChaps > 0 ? Math.round(doneChaps / totalChaps * 100) : 0;
+  const latestTest = s.tests.length > 0 ? s.tests[0] : { score: 0, total: 0 };
   const pendingHW = s.previousHomework.filter(h => !h.done).length;
-  const avgScore = Math.round(s.subjects.reduce((a,b) => a+b.score, 0) / s.subjects.length);
+  const avgScore = s.subjects.length > 0 ? Math.round(s.subjects.reduce((a,b) => a+b.score, 0) / s.subjects.length) : 0;
 
   document.getElementById('statGrid').innerHTML = `
     <div class="stat-card blue">
@@ -808,10 +759,11 @@ function populateHome(s) {
   let hwHtml = '<div class="hw-preview-title"><div class="hw-dot"></div> Today\'s Homework</div>';
   s.todayHomework.forEach(h => {
     hwHtml += `<div class="hw-row">
-      <div class="hw-subj" style="background:${h.subjectColor}22;border-color:${h.subjectColor};color:${h.subjectColor}">${h.subject}</div>
+      <div class="hw-subj" style="background:${h.subjectColor || '#4361EE'}22;border-color:${h.subjectColor || '#4361EE'};color:${h.subjectColor || '#4361EE'}">${h.subject}</div>
       <div class="hw-task">${h.task}</div>
     </div>`;
   });
+  if(s.todayHomework.length === 0) hwHtml += '<div style="font-size:13px; color:var(--grey); padding-top:5px;">No homework assigned today! 🎉</div>';
   hwContainer.innerHTML = hwHtml;
 
   // Teacher msg
@@ -834,6 +786,7 @@ function populateHomework(s) {
       <div class="status-chip pending">Due</div>
     </div>`;
   });
+  if(s.todayHomework.length === 0) todayHtml = '<p style="text-align:center; font-size:13px; color:var(--grey); margin-bottom:20px;">No new homework! Enjoy your day.</p>';
   document.getElementById('todayHWList').innerHTML = todayHtml;
 
   let prevHtml = '';
@@ -848,6 +801,7 @@ function populateHomework(s) {
       <div class="status-chip ${h.done ? 'done' : 'pending'}">${h.done ? 'Done ✓' : 'Pending'}</div>
     </div>`;
   });
+  if(s.previousHomework.length === 0) prevHtml = '<p style="text-align:center; font-size:13px; color:var(--grey);">No past homework recorded yet.</p>';
   document.getElementById('prevHWList').innerHTML = prevHtml;
 }
 
@@ -857,16 +811,22 @@ function populateProgress(s) {
   const strong = sorted.slice(0, 3);
   const weak = sorted.slice(-3).reverse();
 
-  document.getElementById('swGrid').innerHTML = `
-    <div class="sw-card strong-card">
-      <div class="sw-head">💪 STRONG</div>
-      ${strong.map(sub => `<div class="sw-subj-item"><span>${sub.icon}</span> ${sub.name} <b style="margin-left:auto;color:#059669">${sub.score}%</b></div>`).join('')}
-    </div>
-    <div class="sw-card weak-card">
-      <div class="sw-head">📌 NEEDS WORK</div>
-      ${weak.map(sub => `<div class="sw-subj-item"><span>${sub.icon}</span> ${sub.name} <b style="margin-left:auto;color:var(--orange)">${sub.score}%</b></div>`).join('')}
-    </div>
-  `;
+  let swHtml = '';
+  if(sorted.length > 0) {
+    swHtml = `
+      <div class="sw-card strong-card">
+        <div class="sw-head">💪 STRONG</div>
+        ${strong.map(sub => `<div class="sw-subj-item"><span>${sub.icon || '📚'}</span> ${sub.name} <b style="margin-left:auto;color:#059669">${sub.score}%</b></div>`).join('')}
+      </div>
+      <div class="sw-card weak-card">
+        <div class="sw-head">📌 NEEDS WORK</div>
+        ${weak.map(sub => `<div class="sw-subj-item"><span>${sub.icon || '📚'}</span> ${sub.name} <b style="margin-left:auto;color:var(--orange)">${sub.score}%</b></div>`).join('')}
+      </div>
+    `;
+  } else {
+    swHtml = '<p style="font-size:13px; color:var(--grey); padding: 10px;">Not enough data yet.</p>';
+  }
+  document.getElementById('swGrid').innerHTML = swHtml;
 
   let barsHtml = '<div style="font-family:\'Righteous\',cursive;font-size:15px;color:var(--dark);margin-bottom:12px;">Subject-wise Performance</div>';
   sorted.forEach(sub => {
@@ -874,44 +834,55 @@ function populateProgress(s) {
     const pctColor = sub.score >= 85 ? '#059669' : sub.score >= 70 ? 'var(--blue)' : sub.score >= 55 ? '#B8860B' : 'var(--orange)';
     barsHtml += `<div class="subj-bar-item">
       <div class="subj-bar-top">
-        <div class="subj-bar-name">${sub.icon} ${sub.name}</div>
+        <div class="subj-bar-name">${sub.icon || '📚'} ${sub.name}</div>
         <div class="subj-bar-pct" style="color:${pctColor}">${sub.score}%</div>
       </div>
       <div class="bar-track"><div class="bar-fill ${cls}" style="width:${sub.score}%"></div></div>
     </div>`;
   });
+  if(sorted.length === 0) barsHtml += '<p style="font-size:13px; color:var(--grey);">No subjects recorded yet.</p>';
   document.getElementById('subjectBars').innerHTML = barsHtml;
 
   // Chart
   if (perfChart) { perfChart.destroy(); perfChart = null; }
   const ctx = document.getElementById('perfChart').getContext('2d');
-  perfChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: s.perfLabels,
-      datasets: [{
-        label: 'Overall Score %',
-        data: s.perfScores,
-        borderColor: '#4361EE',
-        backgroundColor: 'rgba(67,97,238,0.12)',
-        borderWidth: 3,
-        pointBackgroundColor: '#E8522A',
-        pointBorderColor: '#111118',
-        pointBorderWidth: 2,
-        pointRadius: 6,
-        fill: true,
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { min: 50, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { family: 'DM Sans', weight: '700' } } },
-        x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', weight: '700' } } }
+  
+  // Only draw chart if there are scores
+  if(s.perfScores && s.perfScores.length > 0) {
+    perfChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: s.perfLabels,
+        datasets: [{
+          label: 'Overall Score %',
+          data: s.perfScores,
+          borderColor: '#4361EE',
+          backgroundColor: 'rgba(67,97,238,0.12)',
+          borderWidth: 3,
+          pointBackgroundColor: '#E8522A',
+          pointBorderColor: '#111118',
+          pointBorderWidth: 2,
+          pointRadius: 6,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { min: 0, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { family: 'DM Sans', weight: '700' } } },
+          x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', weight: '700' } } }
+        }
       }
-    }
-  });
+    });
+  } else {
+    // Empty chart state
+    perfChart = new Chart(ctx, {
+      type: 'line', data: { labels: ['No Data'], datasets: [{ data: [0] }] },
+      options: { scales: { y: { display: false }, x: { display: false } }, plugins: { legend: { display: false } } }
+    });
+  }
 }
 
 function gradeColor(g) {
@@ -927,6 +898,7 @@ function gradeText(g) {
   return '#C00';
 }
 function scoreBg(score, total) {
+  if (!total || total === 0) return '#FFF1F1';
   const p = score/total;
   if (p >= 0.9) return '#E8FFF5';
   if (p >= 0.75) return '#EEF6FF';
@@ -940,6 +912,11 @@ function populateTests(s) {
     const bg = scoreBg(t.score, t.total);
     const gc = gradeColor(t.grade);
     const gt = gradeText(t.grade);
+    
+    // Ensure arrays exist to map over
+    const strongItems = t.strong || [];
+    const weakItems = t.weak || [];
+    
     html += `
     ${t.latest ? '<div class="test-latest-badge">🔥 LATEST TEST</div>' : ''}
     <div class="test-card ${t.latest ? 'latest' : ''}" id="tc${i}">
@@ -959,44 +936,54 @@ function populateTests(s) {
       <div class="test-body">
         <div class="test-section">
           <div class="test-sec-label strong">✅ STRONG CONCEPTS</div>
-          <div>${t.strong.map(c => `<span class="concept-pill strong">${c}</span>`).join('')}</div>
+          <div>${strongItems.map(c => `<span class="concept-pill strong">${c}</span>`).join('')}</div>
         </div>
         <div class="test-section">
           <div class="test-sec-label weak">⚠️ NEEDS REVISION</div>
-          <div>${t.weak.map(c => `<span class="concept-pill weak">${c}</span>`).join('')}</div>
+          <div>${weakItems.map(c => `<span class="concept-pill weak">${c}</span>`).join('')}</div>
         </div>
         <div class="test-section">
           <div class="test-sec-label improve">💡 IMPROVEMENTS TO CONSIDER</div>
-          <div class="improve-box">${t.improve}</div>
+          <div class="improve-box">${t.improve || 'Keep up the good work!'}</div>
         </div>
         <div class="test-section">
           <div class="test-sec-label note">📝 TEACHER'S NOTE</div>
-          <div class="note-box"><span>✏️</span><span>${t.note}</span></div>
+          <div class="note-box"><span>✏️</span><span>${t.note || 'No additional notes.'}</span></div>
         </div>
       </div>
     </div>`;
   });
+  
+  if (s.tests.length === 0) {
+    html = '<p style="text-align:center; font-size:14px; color:var(--grey); margin-top:20px;">No tests recorded yet.</p>';
+  }
+  
   document.getElementById('testsList').innerHTML = html;
-  // Auto-open latest
-  toggleTest(0);
+  
+  // Auto-open latest if it exists
+  if (s.tests.length > 0) toggleTest(0);
 }
 
 function toggleTest(i) {
   const card = document.getElementById('tc' + i);
-  card.classList.toggle('open');
+  if(card) card.classList.toggle('open');
 }
 
 function populateSyllabus(s) {
   let html = '';
   Object.entries(s.syllabus).forEach(([subj, data], idx) => {
-    const total = data.done.length + data.pending.length;
-    const doneCount = data.done.length;
-    const fillPct = Math.round(doneCount / total * 100);
+    // Ensure arrays exist
+    const doneItems = data.done || [];
+    const pendingItems = data.pending || [];
+    const total = doneItems.length + pendingItems.length;
+    const doneCount = doneItems.length;
+    const fillPct = total > 0 ? Math.round(doneCount / total * 100) : 0;
+    
     html += `
     <div class="syllabus-subject" id="syl${idx}">
       <div class="syl-header" onclick="toggleSyl(${idx})">
-        <div class="syl-icon">${subj.split(' ')[0]}</div>
-        <div class="syl-name">${subj.split(' ').slice(1).join(' ')}</div>
+        <div class="syl-icon">${subj.split(' ')[0] || '📚'}</div>
+        <div class="syl-name">${subj.split(' ').slice(1).join(' ') || subj}</div>
         <div class="syl-progress">
           <div class="syl-frac">${doneCount}/${total}</div>
           <div class="syl-mini-bar"><div class="syl-mini-fill" style="width:${fillPct}%"></div></div>
@@ -1004,13 +991,13 @@ function populateSyllabus(s) {
         <div class="syl-expand">▼</div>
       </div>
       <div class="syl-body">
-        ${data.done.map(ch => `
+        ${doneItems.map(ch => `
           <div class="syl-chapter">
             <div class="chk done">✓</div>
             <div class="cname done">${ch}</div>
             <div class="ctag done">Taught ✓</div>
           </div>`).join('')}
-        ${data.pending.map(ch => `
+        ${pendingItems.map(ch => `
           <div class="syl-chapter">
             <div class="chk pending">○</div>
             <div class="cname pending">${ch}</div>
@@ -1019,11 +1006,17 @@ function populateSyllabus(s) {
       </div>
     </div>`;
   });
+  
+  if (Object.keys(s.syllabus).length === 0) {
+    html = '<p style="text-align:center; font-size:14px; color:var(--grey); margin-top:20px;">No syllabus data available.</p>';
+  }
+  
   document.getElementById('syllabusList').innerHTML = html;
 }
 
 function toggleSyl(i) {
-  document.getElementById('syl' + i).classList.toggle('open');
+  const elem = document.getElementById('syl' + i);
+  if(elem) elem.classList.toggle('open');
 }
 
 // ═══════════════════════════════════
