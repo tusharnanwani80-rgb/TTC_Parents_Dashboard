@@ -611,42 +611,54 @@ async function loginStudent() {
 
   if (!raw) return;
 
-  // Change button to show it's loading
-  const originalBtnText = btn.innerText;
   btn.innerText = "⏳ Checking Database...";
   btn.disabled = true;
+  err.classList.remove('show');
 
   try {
-    // 1. Fetch the live data from Google Sheets
+    // Check if URL was pasted
+    if (WEB_APP_URL.includes('PASTE_YOUR')) {
+       throw new Error("You forgot to paste your Web App URL into the HTML file!");
+    }
+
     const response = await fetch(WEB_APP_URL);
-    const result = await response.json();
+    const textData = await response.text(); 
+    
+    let result;
+    try {
+      // If Google blocks the request, it returns a webpage instead of JSON, which breaks here
+      result = JSON.parse(textData);
+    } catch (e) {
+      throw new Error("Google blocked the connection. You must deploy the script with access set to 'Anyone'.");
+    }
 
     if (result.status === 'ok') {
-      STUDENTS = result.data; // Save the live data
-
-      // 2. Check if the ID exists in the live data
+      STUDENTS = result.data;
+      
       if (STUDENTS[raw]) {
-        err.classList.remove('show');
         currentStudent = STUDENTS[raw];
-        
-        // Setup welcome screen
         document.getElementById('welcomeParentMsg').textContent = `Hello, ${currentStudent.parentName}! 🙏`;
         document.getElementById('welcomeSubMsg').textContent = `${currentStudent.name} · ${currentStudent.class} · ${currentStudent.board}`;
         showScreen('welcomeScreen');
         playWelcomeSound();
         confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ['#E8522A','#FFD93D','#4361EE','#FF3D8A','#06D6A0'] });
       } else {
-        // ID not found in Google Sheets
-        showError();
+        err.innerHTML = `❌ ID "${raw}" exists, but it's not in the database yet.`;
+        err.classList.add('show');
       }
     } else {
-      console.error("Database Error:", result.msg);
-      alert("Error reading from Google Sheets. Please check the backend.");
+      err.innerHTML = "❌ Database Error: " + result.msg;
+      err.classList.add('show');
     }
   } catch (error) {
-    console.error("Network Error:", error);
-    alert("Could not connect to the database. Please check your internet.");
+    err.innerHTML = "⚠️ " + error.message;
+    err.classList.add('show');
+    document.getElementById('studentIdInput').style.borderColor = 'var(--pink)';
   }
+
+  btn.innerText = "🚀 View Dashboard";
+  btn.disabled = false;
+}
 
   // Restore button state
   btn.innerText = originalBtnText;
